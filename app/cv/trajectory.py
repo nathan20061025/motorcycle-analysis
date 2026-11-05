@@ -16,6 +16,7 @@ class Track:
     confs: list = field(default_factory=list)
     fps: float = 25.0
     raw_ids: list = field(default_factory=list)
+    interpolated: set = field(default_factory=set)   # frames filled by interpolation
 
     def add(self, frame, box, conf):
         self.frames.append(frame); self.boxes.append(tuple(box)); self.confs.append(conf)
