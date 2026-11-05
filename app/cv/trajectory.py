@@ -55,6 +55,7 @@ def smooth(xy, window=9):
 def analyze(track: Track, H=None, vel_window_s=1.0, smooth_window=9):
     """Dict of per-sample arrays: xy (smoothed, normalized units), t, vel, speed, heading (deg)."""
     g = track.ground_px()
+    px = smooth(g, smooth_window)
     if H is not None and len(g):
         g = project(H, g)
     xy = smooth(g, smooth_window) / track.scale(H)
@@ -68,7 +69,23 @@ def analyze(track: Track, H=None, vel_window_s=1.0, smooth_window=9):
             vel[i] = (xy[k] - xy[j]) / (t[k] - t[j])
     speed = np.hypot(vel[:, 0], vel[:, 1])
     heading = np.array([angle_of(*v) for v in vel])
-    return {"xy": xy, "t": t, "vel": vel, "speed": speed, "heading": heading}
+    return {"xy": xy, "px": px, "t": t, "vel": vel, "speed": speed, "heading": heading}
+
+
+def runs(mask, t, bridge_s=0.3):
+    """(start,end) index pairs of True runs; gaps <= bridge_s are bridged."""
+    idx = np.flatnonzero(mask)
+    out = []
+    if not len(idx):
+        return out
+    s = p = idx[0]
+    for i in idx[1:]:
+        if t[i] - t[p] <= bridge_s:
+            p = i
+        else:
+            out.append((int(s), int(p))); s = p = i
+    out.append((int(s), int(p)))
+    return out
 
 
 def net_displacement(xy):

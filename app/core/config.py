@@ -39,7 +39,7 @@ class Settings:
     # crosswalk
     cw_min_frames: int = 5           # frames ground point inside
     cw_min_extent_frac: float = 0.5  # displacement through polygon / its extent
-    cw_walk_speed: float = 0.8       # speed below this + person beside => walking
+    cw_walk_speed: float = 1.5       # speed (units/s) at/below this = walking pace
     event_merge_s: float = 2.0       # merge events on same track within this gap
 
 
