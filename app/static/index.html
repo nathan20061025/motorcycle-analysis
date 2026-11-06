@@ -1,1 +1,78 @@
-<!doctype html><meta charset="utf-8"><title>Traffic Analysis</title><p>UI placeholder (Phase 5).</p>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Motorcycle Traffic Analysis</title><link rel="icon" href="data:,"><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><h1>Motorcycle Traffic Analysis</h1><span id="msg"></span></header>
+<div id="app">
+<aside>
+  <h2>1. Upload</h2>
+  <input type="file" id="file" accept="video/*"><button id="upBtn">Upload</button>
+  <progress id="upProg" value="0" max="100" hidden></progress>
+  <h2>Videos</h2><ul id="videos"></ul>
+</aside>
+<main>
+  <p id="empty">Upload or select a video to begin.</p>
+  <div id="work" hidden>
+    <nav><button id="tabCfg" class="tab on">2. Configure &amp; process</button><button id="tabRes" class="tab">3. Results</button></nav>
+
+    <section id="cfg">
+      <div class="bar">
+        <label><input type="radio" name="tool" value="select" checked> Select/edit</label>
+        <label><input type="radio" name="tool" value="crosswalk"> Crosswalk</label>
+        <label><input type="radio" name="tool" value="zone"> Direction zone</label>
+        <label><input type="radio" name="tool" value="homography"> Homography (4 pts)</label>
+        <button id="finish">Finish polygon</button><button id="undo">Undo</button><button id="del">Delete selected</button>
+      </div>
+      <p id="hint" class="hint"></p>
+      <div class="cols">
+        <canvas id="cv"></canvas>
+        <div class="panel">
+          <h3>Items</h3><ul id="items"></ul>
+          <div id="props"></div>
+          <h3>Global</h3>
+          <label title="Optional permitted heading (deg, 0=right, 90=down) used when no zones are drawn">Default direction (deg) <input type="number" id="defdir" step="1" placeholder="none"></label>
+          <label title="Real size of the homography rectangle (metres) -> ground units">Ground size w×h <input type="number" id="gw" value="10" step="any" style="width:4em"> × <input type="number" id="gh" value="10" step="any" style="width:4em"></label>
+          <button id="clearH">Clear homography</button>
+          <details><summary>Thresholds (blank = default)</summary><div id="thr"></div></details>
+          <div class="bar"><button id="save">Save config</button><button id="process" class="primary">Save &amp; process</button></div>
+          <div id="job" hidden><progress id="jprog" max="100" value="0"></progress><div id="jtxt"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="res" hidden>
+      <div class="bar">
+        <label>Run <select id="jobSel"></select></label>
+        <a id="exJson" class="btn" href="#">Export JSON</a><a id="exCsv" class="btn" href="#">Export CSV</a>
+        <label><input type="checkbox" id="burned"> Burned-in annotated video</label>
+      </div>
+      <div class="cols">
+        <div>
+          <div id="stage"><video id="vid" controls preload="auto"></video><canvas id="ov"></canvas></div>
+          <div class="bar">
+            <button id="back">◀ frame</button><button id="fwd">frame ▶</button><span id="fr"></span>
+            <label><input type="checkbox" data-show="boxes" checked> boxes</label>
+            <label><input type="checkbox" data-show="ids" checked> IDs</label>
+            <label><input type="checkbox" data-show="traj" checked> trajectories</label>
+            <label><input type="checkbox" data-show="zones" checked> zones</label>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Events</h3>
+          <div class="bar">
+            <select id="fType"><option value="">all types</option><option value="wrong_way">wrong way</option><option value="crosswalk_riding">crosswalk riding</option></select>
+            <select id="fStatus"><option value="">all status</option><option value="suspected">suspected</option><option value="insufficient_evidence">insufficient evidence</option></select>
+            <select id="fReview"><option value="">any review</option><option>pending</option><option>confirmed</option><option>rejected</option></select>
+            <label>min conf <input type="number" id="fConf" min="0" max="1" step="0.1" value="0" style="width:4em"></label>
+          </div>
+          <table id="evt"><thead><tr><th>Type</th><th>Status</th><th>Track</th><th>Time (s)</th><th>Conf</th><th>Review</th></tr></thead><tbody></tbody></table>
+          <div id="detail"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+</div>
+<div id="lightbox" hidden><img alt="evidence"></div>
+<script src="app.js"></script>
+</body></html>

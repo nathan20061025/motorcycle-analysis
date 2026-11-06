@@ -48,9 +48,9 @@ def frames(job_id: str):
 
 
 @router.get("/{job_id}/video")
-def video(job_id: str):
+def video(job_id: str, variant: str = Query("annotated", pattern="^(annotated|clean)$")):
     _done(job_id)   # FileResponse serves HTTP Range requests (206) for seeking
-    return FileResponse(jobs.job_dir(job_id) / "annotated.mp4", media_type="video/mp4")
+    return FileResponse(jobs.job_dir(job_id) / f"{variant}.mp4", media_type="video/mp4")
 
 
 @router.get("/{job_id}/evidence/{name}")

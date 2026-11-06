@@ -9,7 +9,7 @@ from app.core.models import VideoConfig
 from app.cv.event_verifier import build_events
 from app.cv.evidence import render_evidence
 from app.cv.geometry import homography
-from app.cv.render import render_annotated
+from app.cv.render import render_annotated, to_h264
 from app.cv.track_stitcher import stitch, is_low_confidence
 from app.cv.trajectory import Track
 
@@ -97,6 +97,7 @@ def run(video, out_dir, cfg=None, vc=None, progress=None, tracker=None, id_prefi
     a = time.time()
     render_annotated(video, os.path.join(out_dir, "annotated.mp4"), frames_json, stable_of, stable, events, vc,
                      cfg.stride, lambda f: prog(0.85 + 0.15 * min(f, 1), "rendering", None))
+    to_h264(video, os.path.join(out_dir, "clean.mp4"))   # browser-playable source for the UI's canvas overlay
     T["render_s"] = time.time() - a
 
     tracks_out = [{"id": t.id, "raw_ids": t.raw_ids, "low_confidence": is_low_confidence(t, cfg),
