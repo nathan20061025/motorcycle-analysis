@@ -1,0 +1,72 @@
+HOW TO RUN THE TRAFFIC PROJECT ON ANOTHER PC (Windows)
+=====================================================
+
+1) COPY THE PROJECT
+   - Copy the whole "trafiic project" folder to the other PC (USB, zip, etc.).
+   - You can leave out the folders ".venv" and "data" (they are specific to the old PC).
+   - Optional: keep "yolov8n.pt" (the model file) in the folder to skip a download.
+
+2) INSTALL PYTHON (once)
+   - Download Python 3.11, 3.12 or 3.13 from https://www.python.org/downloads/
+   - During install, TICK "Add Python to PATH".
+   - Optional but recommended: install ffmpeg so the annotated video plays in the browser:
+         winget install ffmpeg
+     (close and reopen PowerShell afterwards)
+
+3) SET UP (once, needs internet, about 2 GB download)
+   Open PowerShell, go to the project folder, then run:
+
+         cd "C:\path\to\trafiic project"
+         python -m venv .venv
+         .venv\Scripts\python -m pip install --upgrade pip
+         .venv\Scripts\pip install fastapi "uvicorn[standard]" python-multipart opencv-python-headless scipy numpy pydantic ultralytics lap
+
+   (Use this list. Do NOT use requirements.txt: its pinned versions were never tested on a clean PC.)
+
+4) START THE APP (every time)
+         cd "C:\path\to\trafiic project"
+         $env:TRAFFIC_MODEL="yolov8n.pt"
+         $env:DATA_DIR="data"
+         .venv\Scripts\python -m uvicorn app.main:app --port 8080
+
+   Leave this window open while using the app.
+   First run downloads yolov8n.pt automatically if it is not in the folder.
+
+5) OPEN THE APP
+   In a browser go to:   http://localhost:8080
+
+6) USE IT
+   a. Upload a traffic video (Choose File -> Upload).
+   b. On the first frame, draw:
+        - "Direction zone": click corners, press "Finish polygon", then click twice for the
+          permitted-direction arrow (start, end).
+        - "Crosswalk": click corners, press "Finish polygon".
+   c. Click "Save config", then "Save & process" and wait for the progress bar.
+   d. The "Results" tab opens: play the video, click an event to see evidence,
+      Confirm / Reject it, and use "Export JSON" / "Export CSV".
+
+7) STOP
+   Press Ctrl+C in the PowerShell window running the server.
+   Next time, repeat only steps 4 and 5.
+
+TIPS
+   - Big 4K videos are slow on CPU: in "Thresholds" set stride = 2 or 3.
+   - Tiny/distant motorcycles: try imgsz = 1280 (more accurate, slower).
+   - Better accuracy, slower: use  $env:TRAFFIC_MODEL="yolov8s.pt"
+   - Port busy? Change "--port 8080" to another number and use it in the URL.
+
+TROUBLESHOOTING
+   - "python is not recognized": reinstall Python with "Add to PATH", or use "py" instead of "python".
+   - Page does not open: check the server window is still running; try http://127.0.0.1:8080
+   - Annotated video does not play: install ffmpeg (step 2). The canvas playback view still works.
+   - Script blocked in PowerShell: run  Set-ExecutionPolicy -Scope Process Bypass  and retry.
+
+OPTIONAL: RUN THE TESTS
+         .venv\Scripts\pip install pytest httpx
+         .venv\Scripts\python -m pytest -q        (expected: 42 passed)
+
+OPTIONAL: DOCKER (not tested yet)
+   Install Docker Desktop, then in the project folder:
+         docker compose up --build
+   Open http://localhost:8080
+   (GPU: docker compose -f compose.yaml -f compose.gpu.yaml up --build, needs NVIDIA Container Toolkit.)
