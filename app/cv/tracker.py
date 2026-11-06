@@ -25,7 +25,7 @@ class Tracker:
     def update(self, frame):
         r = self.model.track(frame, persist=True, conf=self.cfg.conf, imgsz=self.cfg.imgsz,
                              classes=list(CLASSES), tracker=f"{self.cfg.tracker}.yaml",
-                             device=self.cfg.device, verbose=False)[0]
+                             device=0 if self.cfg.device == "cuda" else self.cfg.device, verbose=False)[0]
         b = r.boxes
         if b is None or b.id is None:
             return []

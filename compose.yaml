@@ -1,0 +1,21 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        MODEL: yolov8s.pt          # use yolov8n.pt for faster CPU dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - traffic-data:/data
+    environment:
+      TRAFFIC_DEVICE: cpu          # cpu | cuda
+      TRAFFIC_TRACKER: bytetrack   # bytetrack | botsort
+      # Any threshold in app/core/config.py can be overridden as TRAFFIC_<NAME>, e.g.:
+      # TRAFFIC_CONF: "0.3"
+      # TRAFFIC_IMGSZ: "640"
+      # TRAFFIC_STRIDE: "2"
+    restart: unless-stopped
+
+volumes:
+  traffic-data:

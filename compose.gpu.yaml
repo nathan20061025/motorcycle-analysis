@@ -1,0 +1,16 @@
+# Usage: docker compose -f compose.yaml -f compose.gpu.yaml up --build
+# Requires an NVIDIA GPU + driver and the NVIDIA Container Toolkit on the host.
+services:
+  app:
+    build:
+      args:
+        TORCH_INDEX: https://download.pytorch.org/whl/cu121   # CUDA torch wheels
+    environment:
+      TRAFFIC_DEVICE: cuda
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

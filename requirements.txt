@@ -1,3 +1,6 @@
+# torch/torchvision: Docker installs these first from the CPU (or CUDA) index; the pins below then match.
+torch==2.5.1
+torchvision==0.20.1
 fastapi==0.115.6
 uvicorn[standard]==0.34.0
 python-multipart==0.0.20
