@@ -1,6 +1,12 @@
 """All thresholds with documented defaults; each overridable via env var TRAFFIC_<NAME>."""
 import os
 from dataclasses import dataclass, fields, asdict
+from pathlib import Path
+
+
+def data_dir() -> Path:
+    """Persistent state root (SQLite + videos + job outputs). /data in Docker."""
+    return Path(os.environ.get("DATA_DIR", "data"))
 
 
 def _env(name, default):
