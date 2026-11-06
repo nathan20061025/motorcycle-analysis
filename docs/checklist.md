@@ -5,7 +5,7 @@ Legend: ✅ implemented + tested here · 🟡 implemented, partially/indirectly 
 ## Problems
 | # | Item | Files | Evidence / status |
 |---|---|---|---|
-| 1 | Detection + tracking, occlusion/ID changes | `cv/detector.py`, `tracker.py`, `track_stitcher.py` | 🟡 Stitcher ✅ (8 synthetic tests). YOLO/ByteTrack wrapper **never run** (ultralytics/weights not installed locally); tested only via a mocked detector. |
+| 1 | Detection + tracking, occlusion/ID changes | `cv/detector.py`, `tracker.py`, `track_stitcher.py` | 🟡 Stitcher ✅ (8 synthetic tests). YOLO/ByteTrack wrapper smoke-tested on blank frames with ultralytics 8.4.203 + yolov8n (runs, 0 detections as expected); **never run on real footage** (no clip yet), pipeline otherwise tested via a mocked detector. |
 | 2 | Trajectory + permitted direction (perspective, lanes, turns) | `trajectory.py`, `geometry.py`, `models.py` | ✅ synthetic tests (homography round-trip, overlapping zones, turns). Not validated on real perspective. |
 | 3 | Wrong-way | `wrong_way.py` | ✅ clear / turn / brief / stationary / borderline / ambiguous tests. |
 | 4 | Crosswalk riding, riding vs walking | `crosswalk.py`, `rider_analysis.py` | ✅ pass-through / stopped / bbox-only / walking / back-out tests; rider heuristic only on synthetic boxes. |
