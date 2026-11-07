@@ -20,10 +20,23 @@ def draw_dets(img, dets, trails=None):
     return img
 
 
+def _ffmpeg():
+    """System ffmpeg, else the binary bundled by imageio-ffmpeg, else None."""
+    p = shutil.which("ffmpeg")
+    if p:
+        return p
+    try:
+        import imageio_ffmpeg
+        return imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        return None
+
+
 def to_h264(src, dst):
-    """Re-encode to browser-playable H.264 via ffmpeg; plain copy if ffmpeg is missing."""
-    if shutil.which("ffmpeg"):
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-c:v", "libx264", "-pix_fmt", "yuv420p",
+    """Re-encode to browser-playable H.264 via ffmpeg; plain copy if no ffmpeg is available."""
+    ff = _ffmpeg()
+    if ff:
+        subprocess.run([ff, "-y", "-loglevel", "error", "-i", src, "-c:v", "libx264", "-pix_fmt", "yuv420p",
                         "-movflags", "+faststart", dst], check=True)
     else:
         shutil.copy(src, dst)

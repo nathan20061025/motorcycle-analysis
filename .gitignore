@@ -15,3 +15,8 @@ samples/
 *.sqlite
 .env
 .vscode/
+build/
+dist/
+*.spec
+installer/Output/
+*.zip
