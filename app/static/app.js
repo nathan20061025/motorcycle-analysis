@@ -103,7 +103,8 @@ function finishPoly() {
   renderItems(); redraw();
 }
 $("#finish").onclick = finishPoly; cv.ondblclick = () => { draft.pop(); finishPoly(); };   // the 2 mousedowns of a dblclick added a duplicate point
-cv.onmousedown = e => {
+cv.onpointerdown = e => {
+  cv.setPointerCapture && cv.setPointerCapture(e.pointerId);
   const p = pt(e);
   if (tool === "select") {
     if (sel) { const s = cfg[sel.kind][sel.i]; const vi = s && s.polygon.findIndex(q => Math.hypot(q[0] - p[0], q[1] - p[1]) < 10 * cv.width / cv.getBoundingClientRect().width); if (vi >= 0) { snapshot(); drag = vi; return; } }
@@ -123,8 +124,8 @@ cv.onmousedown = e => {
     redraw();
   } else { draft.push(p); redraw(); }
 };
-cv.onmousemove = e => { if (drag !== null && sel) { cfg[sel.kind][sel.i].polygon[drag] = pt(e); redraw(); } };
-window.onmouseup = () => { drag = null; };
+cv.onpointermove = e => { if (drag !== null && sel) { cfg[sel.kind][sel.i].polygon[drag] = pt(e); redraw(); } };
+window.onpointerup = window.onpointercancel = () => { drag = null; };
 $("#undo").onclick = () => {
   if (draft.length) draft.pop(); else if (arrowPts.length) arrowPts.pop(); else if (pendingPoly) { draft = pendingPoly; pendingPoly = null; }
   else if (undo.length) { cfg = JSON.parse(undo.pop()); sel = null; renderItems(); } redraw();

@@ -127,3 +127,31 @@ tbody tr{cursor:pointer;transition:background .1s}tbody tr:hover{background:#636
 /* events table fits its panel */
 #evt{font-size:12px;table-layout:auto}#evt th,#evt td{padding:8px 5px}#evt td:nth-child(4){white-space:nowrap}
 .panel{overflow:hidden}
+
+/* ---------- mobile / small screens ---------- */
+canvas#cv{touch-action:none}              /* let the canvas receive touch drawing instead of scrolling */
+@media(max-width:960px){
+  aside{position:static}
+  #app{gap:12px}
+}
+@media(max-width:700px){
+  header{padding:10px 14px;gap:10px}.tag{display:none}h1{font-size:16px}.logo{width:34px;height:34px}
+  #app{padding:10px}
+  aside,main{padding:12px;border-radius:12px}
+  nav{display:flex;width:100%}.tab{flex:1;padding:10px 6px;text-align:center;justify-content:center;font-size:13px}
+  button,.btn,input,select{min-height:40px;font-size:16px}        /* comfortable tap targets, no iOS zoom */
+  .bar{gap:6px}
+  .bar:has(input[name=tool]) label{padding:8px 12px}
+  .bar label{min-height:36px}
+  input[type=checkbox],input[type=radio]{width:18px;height:18px}
+  .cols{gap:12px}.panel{padding:12px;overflow-x:auto}
+  #evt{min-width:430px}
+  #msg{left:12px;right:12px;bottom:12px;max-width:none}
+  #empty{min-height:240px;padding:24px}
+  #videos li{padding:10px}
+  .thumbs{grid-template-columns:repeat(2,1fr)}
+  #thr input{width:5.5em}
+  #fr{width:100%;padding:0}
+  select#jobSel{max-width:100%}
+}
+@media(max-width:380px){.tab{font-size:12px}h1{font-size:15px}}
